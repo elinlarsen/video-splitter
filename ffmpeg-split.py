@@ -93,67 +93,19 @@ def split_by_seconds(filename, split_length, vcodec="copy", acodec="copy",
     process=subprocess.Popen(["ffprobe", filename],   
         stdout = subprocess.PIPE,
         stderr = subprocess.STDOUT)
-    #process = subprocess.Popen(['ffmpeg',  '-i', filename], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    #stdout, stderr = process.communicate()
-    #print(stdout)
-    #print(type(stdout))
-    #print(process)
-    #print(process.stdout.readlines())
-    info=process.stdout.readlines()
-    #print(type(info))
-    #matches=[x  for x  in process.stdout.readlines() if "Duration:" in x ]
-    #print(matches)
-    
-        
-    """
-    output = subprocess.Popen("ffmpeg -i '"+filename+"' 2>&1 | grep 'Duration'",
-                            #shell = True,
-                            #stdout = subprocess.PIPE
-                            ).stdout.read()
-    
-    
-    print(output)
-    matches = re_length.search(output)
-    
-    if matches:
-        video_length = int(matches.group(1)) * 3600 + \
-                        int(matches.group(2)) * 60 + \
-                        int(matches.group(3))
-        print("Video length in seconds: "+str(video_length))
-
-    
-    if matches:
-        video_length = int(matches['hours'])*3600 + \
-                       int(matches['minutes'])*60 + \
-                       int(matches['seconds'])
-        print("Video length in seconds: {}".format(video_length))
-    """
-    
+    info=process.stdout.readlines() 
     for x in info: 
         y=x.decode("utf-8") 
-        #print(y)
-        #print(type(y))
         if "Duration" in y:
             temp=y
             x=temp.split(',')
-            matches=x[0]
-            print(matches)
-            print(int(matches.split(':')[1]))
-            print(int(matches.split(':')[2])*60)
-            
-            print(int(matches.split(':')[3].split('.')[0]))
-            print(int(matches.split(':')[1]) * 3600 + \
-                        int(matches.split(':')[2]) * 60 + \
-                        int(matches.split(':')[3].split('.')[0]))
-            
+            matches=x[0]        
+    
     if matches:
         video_length=int(matches.split(':')[1]) * 3600 + \
                         int(matches.split(':')[2]) * 60 + \
                         int(matches.split(':')[3].split('.')[0])
-        print("Video length in seconds: "+str(video_length))
-    
-    #matches = re.search(r"Duration:\s{1}(?P\d+?):(?P\d+?):(?P\d+.\d+?),", stdout, re.DOTALL).groupdict()
-
+        print("Video length in seconds: "+str(video_length)) 
     else:
         print("Can't determine video length.")
         raise SystemExit
